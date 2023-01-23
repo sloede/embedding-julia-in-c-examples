@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Print contents
-  printf("BEFORE\n");
+  printf("Original contents:\n");
   print_arrays(data, result, 10);
   printf("\n");
 
@@ -37,12 +37,12 @@ int main(int argc, char *argv[]) {
   jl_array_t* data_jl = jl_ptr_to_array_1d(array_type, data, 10, 0);
   jl_array_t* result_jl = jl_ptr_to_array_1d(array_type, result, 10, 0);
 
-  // Call function `foo!` from Julia
-  jl_function_t* foo_jl = jl_get_function(jl_main_module, "foo!");
-  jl_call2(foo_jl, (jl_value_t*)result_jl, (jl_value_t*)data_jl);
+  // Call function `double_me!` from Julia
+  jl_function_t* double_me_jl = jl_get_function(jl_main_module, "double_me!");
+  jl_call2(double_me_jl, (jl_value_t*)result_jl, (jl_value_t*)data_jl);
   
   // Print contents again
-  printf("AFTER\n");
+  printf("Contents after call to `double_me!`:\n");
   print_arrays(data, result, 10);
 
   // perform clean-up tasks in Julia
