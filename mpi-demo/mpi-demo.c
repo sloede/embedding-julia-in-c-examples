@@ -38,7 +38,8 @@ int main(int argc, char *argv[]) {
   jl_eval_string("include(\"mpi-demo.jl\")");
 
   printf("A is for apple\n");
-  jl_value_t* ret = jl_eval_string("@cfunction(parallel_sum, Cint, (Ptr{Cint}, Cint, MPI.MPI_Comm))");
+  /* jl_value_t* ret = jl_eval_string("@cfunction(parallel_sum, Cint, (Ptr{Cint}, Cint, MPI.MPI_Comm))"); */
+  jl_value_t* ret = jl_eval_string("parallel_sum_cfunction()");
 
   printf("B is for balloon\n");
   int (*parallel_sum)(int*, int, MPI_Comm) = jl_unbox_voidpointer(ret);
