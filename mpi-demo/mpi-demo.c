@@ -29,10 +29,13 @@ int main(int argc, char *argv[]) {
   // Create an array in C and fill it with random data
   int* data = malloc(sizeof(int)*10);
   for (int i = 0; i < 10; i++) {
-    data[i] = rank*10 + i + 17;
+    data[i] = rank*10 + i + 1;
   }
 
   print_array(data, 10, rank);
+
+  // Load Julia file with function definition
+  jl_eval_string("include(\"mpi-demo.jl\")");
 
   printf("A is for apple\n");
   jl_value_t* ret = jl_eval_string("@cfunction(parallel_sum, Cint, (Ptr{Cint}, Cint, MPI.MPI_Comm))");
