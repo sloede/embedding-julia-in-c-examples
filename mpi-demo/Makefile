@@ -8,6 +8,9 @@ LDLIBS   += $(shell $(JL_SHARE)/julia-config.jl --ldlibs)
 
 all: mpi-demo
 
+mpi-demo: mpi-demo.c
+	mpicc $(CFLAGS) $(LDFLAGS) mpi-demo.c -o mpi-demo $(LDLIBS)
+
 .PHONY: all clean
 
 clean:

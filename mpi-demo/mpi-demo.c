@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
   printf("\n");
 
   // load Julia file with function definition
-  jl_eval_string("include(\"simple-demo.jl\")");
+  jl_eval_string("include(\"mpi-demo.jl\")");
 
   // Create appropriate Julia array wrappers
   jl_value_t* array_type = jl_apply_array_type((jl_value_t*)jl_float64_type, 1);
