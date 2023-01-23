@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
   print_arrays(data, result, 10);
   printf("\n");
 
-  // load Julia file with function definition
+  // Load Julia file with function definition
   jl_eval_string("include(\"simple-demo.jl\")");
 
   // Create appropriate Julia array wrappers
