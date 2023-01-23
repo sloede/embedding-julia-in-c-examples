@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
   print_arrays(data, result, 10);
   printf("\n");
 
-  // load Julia file with function definition
+  // Load Julia file with function definition
   jl_eval_string("include(\"simple-demo.jl\")");
 
   // Create appropriate Julia array wrappers
@@ -40,13 +40,17 @@ int main(int argc, char *argv[]) {
   // Call function `double_me!` from Julia
   jl_function_t* double_me_jl = jl_get_function(jl_main_module, "double_me!");
   jl_call2(double_me_jl, (jl_value_t*)result_jl, (jl_value_t*)data_jl);
-  
+
   // Print contents again
   printf("Contents after call to `double_me!`:\n");
   print_arrays(data, result, 10);
 
   // perform clean-up tasks in Julia
   jl_atexit_hook(0);
+
+  // Free memory
+  free(data);
+  free(result);
   return 0;
 }
 
