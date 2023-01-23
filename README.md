@@ -4,6 +4,11 @@ This repository contains examples for how to embed Julia code in C, i.e., how to
 write a C program that passes data to Julia for processing and then continues
 using the results.
 
+There are two demonstrators: The "simple demonstrator" just goes through the
+motions and shows how to call a Julia function from C for some data processing.
+The "MPI demonstrator" is still designed similarly, but in addition uses MPI
+communication on the Julia side to communicate data originally created in C.
+
 
 ## Installation
 Prerequisites:
@@ -86,6 +91,10 @@ Contents after call to `double_me!`:
 data:   0.840 0.394 0.783 0.798 0.912 0.198 0.335 0.768 0.278 0.554
 result: 1.680 0.789 1.566 1.597 1.823 0.395 0.670 1.536 0.556 1.108
 ```
+Here, first an array of 10 doubles is created in C and filled with random
+values. This array and an equal-sized result array are passed to Julia, where
+the values from the input array are doubled and written to the output array. The
+result is then printed from C.
 
 ### MPI demonstrator
 To test the example, start a parallel run by executing the generated file with
@@ -103,7 +112,7 @@ data on rank   2:    21   22   23   24   25   26   27   28   29   30
 result from `parallel_sum` = 465 (expected: 465)
 ```
 On each rank, an integer array with 10 entries is generated in the C part such that over all
-ranks, the consecutive integers from 1 to $10 \times \#ranks$ are found. The
+ranks, the consecutive integers from 1 to $10 \times n_\textrm{ranks}$ are found. The
 arrays are then passed to Julia, where they are summed up in parallel using
 `MPI_Allreduce`, before the result is returned to C. 
 
