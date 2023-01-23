@@ -39,7 +39,7 @@ make
 This should create an executable named `mpi-demo`.
 
 Next, you need to install all relevant Julia packages. The Julia package manager
-Pkg.jl has all information it needs in the
+Pkg.jl gets all information it needs from the
 [`Project.toml`](mpi-demo/Project.toml) and [`Manifest.toml`](mpi-demo/Manifest.toml) files.
 To install these packages, execute Julia with the following command:
 ```shell
@@ -86,6 +86,26 @@ Contents after call to `double_me!`:
 data:   0.840 0.394 0.783 0.798 0.912 0.198 0.335 0.768 0.278 0.554
 result: 1.680 0.789 1.566 1.597 1.823 0.395 0.670 1.536 0.556 1.108
 ```
+
+### MPI demonstrator
+To test the example, start a parallel run by executing the generated file with
+`mpiexec`. In addition, you need to pass the `--project=.` argument, which tells
+Julia that it should use the packages described in the local `Project.toml` and
+`Manifest.toml`:
+```shell
+mpiexec -n 3 ./mpi-demo --project=.
+```
+This will yield an output similar to following:
+```
+data on rank   0:     1    2    3    4    5    6    7    8    9   10
+data on rank   1:    11   12   13   14   15   16   17   18   19   20
+data on rank   2:    21   22   23   24   25   26   27   28   29   30
+result from `parallel_sum` = 465 (expected: 465)
+```
+On each rank, an integer array with 10 entries is generated in the C part such that over all
+ranks, the consecutive integers from 1 to $10 \times \#ranks$ are found. The
+arrays are then passed to Julia, where they are summed up in parallel using
+`MPI_Allreduce`, before the result is returned to C. 
 
 
 ## Author
