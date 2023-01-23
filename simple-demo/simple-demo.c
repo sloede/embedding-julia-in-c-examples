@@ -47,6 +47,10 @@ int main(int argc, char *argv[]) {
 
   // perform clean-up tasks in Julia
   jl_atexit_hook(0);
+
+  // Free memory
+  free(data);
+  free(result);
   return 0;
 }
 
