@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   // Call function `double_me!` from Julia
   jl_function_t* double_me_jl = jl_get_function(jl_main_module, "double_me!");
   jl_call2(double_me_jl, (jl_value_t*)result_jl, (jl_value_t*)data_jl);
-  
+
   // Print contents again
   printf("Contents after call to `double_me!`:\n");
   print_arrays(data, result, 10);
