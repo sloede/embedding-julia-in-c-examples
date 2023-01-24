@@ -87,10 +87,19 @@ Original contents:
 data:   0.840 0.394 0.783 0.798 0.912 0.198 0.335 0.768 0.278 0.554
 result: 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
 
-Contents after call to `double_me!`:
+Contents after call to `double_me_julia_style`:
+data:   0.840 0.394 0.783 0.798 0.912 0.198 0.335 0.768 0.278 0.554
+result: 1.680 0.789 1.566 1.597 1.823 0.395 0.670 1.536 0.556 1.108
+
+Contents after reset:
+data:   0.840 0.394 0.783 0.798 0.912 0.198 0.335 0.768 0.278 0.554
+result: 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
+
+Contents after call to `double_me_c_style`:
 data:   0.840 0.394 0.783 0.798 0.912 0.198 0.335 0.768 0.278 0.554
 result: 1.680 0.789 1.566 1.597 1.823 0.395 0.670 1.536 0.556 1.108
 ```
+
 Here, first an array of 10 doubles is created in C and filled with random
 values. This array and an equal-sized result array are passed to Julia, where
 the values from the input array are doubled and written to the output array. The

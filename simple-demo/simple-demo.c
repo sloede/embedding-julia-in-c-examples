@@ -37,12 +37,33 @@ int main(int argc, char *argv[]) {
   jl_array_t* data_jl = jl_ptr_to_array_1d(array_type, data, 10, 0);
   jl_array_t* result_jl = jl_ptr_to_array_1d(array_type, result, 10, 0);
 
-  // Call function `double_me!` from Julia
-  jl_function_t* double_me_jl = jl_get_function(jl_main_module, "double_me!");
+  // Call function `double_me` from Julia
+  jl_function_t* double_me_jl = jl_get_function(jl_main_module, "double_me_julia_style");
   jl_call2(double_me_jl, (jl_value_t*)result_jl, (jl_value_t*)data_jl);
 
   // Print contents again
-  printf("Contents after call to `double_me!`:\n");
+  printf("Contents after call to `double_me_julia_style`:\n");
+  print_arrays(data, result, 10);
+
+  // This is an alternative approach, where the conversion between Julia and C is handled on the
+  // Julia side
+
+  // Reset results
+  for (int i = 0; i < 10; i++) {
+    result[i] = 0.0;
+  }
+  printf("\nContents after reset:\n");
+  print_arrays(data, result, 10);
+  printf("\n");
+  // Get function pointer to the Julia function
+  void (*double_me_c_style)(double*, double*) = jl_unbox_voidpointer(
+      jl_eval_string("@cfunction(double_me_c_style, Cvoid, (Ptr{Cdouble}, Ptr{Cdouble}))"));
+
+  // Call function `double_me2` defined in Julia
+  double_me_c_style(result, data);
+
+  // Print contents again
+  printf("Contents after call to `double_me_c_style`:\n");
   print_arrays(data, result, 10);
 
   // perform clean-up tasks in Julia
