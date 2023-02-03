@@ -4,10 +4,16 @@ This repository contains examples for how to embed Julia code in C, i.e., how to
 write a C program that passes data to Julia for processing and then continues
 using the results.
 
-There are two demonstrators: The "simple demonstrator" just goes through the
+There are mainly two demonstrators: The "simple demonstrator" just goes through the
 motions and shows how to call a Julia function from C for some data processing.
 The "MPI demonstrator" is still designed similarly, but in addition uses MPI
 communication on the Julia side to communicate data originally created in C.
+
+In addition, a third demonstrator is structured very similar to the "MPI demonstrator",
+but where the main program is written in Fortran. It is slightly more complex than the
+other two examples, as it uses a C-based shim layer. However, this example demonstrates
+that it is possible to call non-trivial Julia functions (e.g., with MPI communication)
+from Fortran, where the functions operate on data that was originally allocated in Fortran.
 
 
 ## Installation
