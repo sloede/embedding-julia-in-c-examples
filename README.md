@@ -85,7 +85,7 @@ This should create an executable named `mpi-demo-fortran`.
 
 Next, you need to install and configure all relevant Julia packages. For this,
 please follow the instructions for the C-based MPI demonstrator
-[above](#mpi-demonstrator-for-fortran).
+[above](#mpi-demonstrator).
 
 
 ## Usage
