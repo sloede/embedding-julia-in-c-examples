@@ -9,6 +9,8 @@ JULIA_DEFINE_FAST_TLS // only define this once, in an executable (not in a share
 // Forward declaration
 void print_array(int* data, int size, int rank);
 int parallel_sum(int* data, MPI_Comm comm);
+static jl_value_t* checked_eval_string(const char* code, const char* func, const char* file, int lineno);
+#define LOC __func__, __FILE__, __LINE__
 
 int main(int argc, char *argv[]) {
   // Parse options relevant for Julia
@@ -34,10 +36,10 @@ int main(int argc, char *argv[]) {
   print_array(data, 10, rank);
 
   // Load Julia file with function definition
-  jl_eval_string("include(\"mpi-demo.jl\")");
+  checked_eval_string("include(\"mpi-demo.jl\")", LOC);
 
   // Get function pointer to the Julia function
-  int (*parallel_sum)(int*, int, MPI_Comm) = jl_unbox_voidpointer(jl_eval_string("parallel_sum_cfunction()"));
+  int (*parallel_sum)(int*, int, MPI_Comm) = jl_unbox_voidpointer(checked_eval_string("parallel_sum_cfunction()", LOC));
 
   // Compute parallel sum and compare to analytical result
   int result = parallel_sum(data, 10, comm);
@@ -65,4 +67,27 @@ void print_array(int* data, int size, int rank) {
     printf(" %4d", data[i]);
   }
   printf("\n");
+}
+
+// Run Julia command and check for errors
+//
+// Adapted from the Julia repository.
+// Source: https://github.com/JuliaLang/julia/blob/c0dd6ff8363f948237304821941b06d67014fa6a/test/embedding/embedding.c#L17-L31
+jl_value_t* checked_eval_string(const char* code, const char* func, const char* file, int lineno) {
+  jl_value_t *result = jl_eval_string(code);
+  if (jl_exception_occurred()) {
+      // none of these allocate, so a gc-root (JL_GC_PUSH) is not necessary
+      jl_printf(jl_stderr_stream(), "ERROR in %s:%d (%s):\n", file, lineno, func);
+      jl_printf(jl_stderr_stream(), "The following Julia code could not be evaluated: %s\n", code);
+      jl_call2(jl_get_function(jl_base_module, "showerror"),
+                jl_stderr_obj(),
+                jl_exception_occurred());
+      jl_printf(jl_stderr_stream(), "\n");
+      jl_atexit_hook(1);
+      exit(1);
+  }
+
+  assert(result && "Missing return value but no exception occurred!");
+
+  return result;
 }
