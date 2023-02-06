@@ -145,6 +145,22 @@ ranks, the consecutive integers from 1 to $10 \times n_\textrm{ranks}$ are found
 arrays are then passed to Julia, where they are summed up in parallel using
 `MPI_Allreduce`, before the result is returned to C.
 
+In case you get errors when you try this example, you can verify that your MPI
+implementation is correctly set up for Julia by running a pure Julia example.
+When executing
+```shell
+mpiexec -n 3 julia --project=. julia-demo.jl
+```
+you should see an output similar to the following:
+```
+data on rank 1: 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+data on rank 2: 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+data on rank 0: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+result from `parallel_sum` = 465 (expected: 465)
+```
+If there are errors, it probably means that your Julia MPI setup is not yet fully
+functional. If there are no errors here, the issue must be on the C side.
+
 ### MPI demonstrator for Fortran
 To test the example, start a parallel run by executing the generated file with
 `mpiexec`. In addition, you need to pass the `--project=.` argument, which tells
